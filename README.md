@@ -22,6 +22,4 @@ Presentations will be hosted in /presentations
 
 [Crash Database Primer](https://gis.penndot.gov/gishub/crashZip/OPEN%20DATA%20PORTAL%20Database%20Primer%2010-16.pdf)
 
-[Crash Database Primer](https://gis.penndot.gov/gishub/crashZip/OPEN%20DATA%20PORTAL%20Database%20Primer%2010-16.pdf)
-
-[Bureau of Planning and Research Transportation Planning Division](https://www.pa.gov/content/dam/copapwp-pagov/en/penndot/documents/public/pubsforms/publications/pub%20601.pdf)
+[Pennsylvania Traffic Data Book](https://www.pa.gov/content/dam/copapwp-pagov/en/penndot/documents/public/pubsforms/publications/pub%20601.pdf)
