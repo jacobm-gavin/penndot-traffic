@@ -12,12 +12,12 @@ Presentations will be hosted in /presentations
 
 
 ## Links to our files and data dictionaries:
-Crash Data (Downloadable): https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990
+[Crash Data (Downloadable)](https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990)
 
-Penn DOT spatial data: https://data-pennshare.opendata.arcgis.com/
+[Penn DOT spatial data](https://data-pennshare.opendata.arcgis.com/)
 
-Crash Information Tool: https://crashinfo.penndot.pa.gov/PCIT/welcome.html
+[Crash Information Tool](https://crashinfo.penndot.pa.gov/PCIT/welcome.html)
 
-PennDOT open map: https://gis.penndot.gov/onemap/
+[PennDOT open map](https://gis.penndot.gov/onemap/)
 
-Crash Database Primer: https://gis.penndot.gov/gishub/crashZip/OPEN%20DATA%20PORTAL%20Database%20Primer%2010-16.pdf
+[Crash Database Primer](https://gis.penndot.gov/gishub/crashZip/OPEN%20DATA%20PORTAL%20Database%20Primer%2010-16.pdf)
