@@ -8,6 +8,13 @@ Jacob Gavin, Logan Camacho, Samuel Adebayo
 Project code will be hosted in /src
 Presentations will be hosted in /presentations
 
-https://gis.penndot.gov/onemap/ 
-
 ## Papers
+
+
+## Links to our files and data dictionaries:
+
+Crash Data (Downloadable): https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990
+
+Penn DOT spatial data: https://data-pennshare.opendata.arcgis.com/
+
+PennDOT open map: https://gis.penndot.gov/onemap/
