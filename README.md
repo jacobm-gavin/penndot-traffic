@@ -19,3 +19,5 @@ Penn DOT spatial data: https://data-pennshare.opendata.arcgis.com/
 Crash Information Tool: https://crashinfo.penndot.pa.gov/PCIT/welcome.html
 
 PennDOT open map: https://gis.penndot.gov/onemap/
+
+Crash Database Primer: https://gis.penndot.gov/gishub/crashZip/OPEN%20DATA%20PORTAL%20Database%20Primer%2010-16.pdf
