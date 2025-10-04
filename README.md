@@ -11,7 +11,7 @@ Presentations will be hosted in /presentations
 ## Papers
 
 
-## Links to our files and data dictionaries:
+## Links to our files, data dictionaries, and supplementary resources:
 [Crash Data (Downloadable)](https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990)
 
 [Penn DOT spatial data](https://data-pennshare.opendata.arcgis.com/)
@@ -26,3 +26,5 @@ Presentations will be hosted in /presentations
 
 
 [Traffic Volume Maps in PDFs](https://www.pa.gov/agencies/penndot/maps/traffic-volume-maps)
+
+[A Summary of Vehicle Detection and Surveillance Technologies use in Intelligent Transportation Systems](https://www.fhwa.dot.gov/policyinformation/pubs/vdstits2007/04.cfm#:~:text=GENERAL%20DESCRIPTION%20OF%20EQUIPMENT:%20Portable,volt%2C%2012%20amp%20rechargeable%20battery.)
