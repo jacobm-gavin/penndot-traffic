@@ -1,0 +1,133 @@
+Data Inventory
+
+- CRASH_2024.csv: crash-level records with location, time, severity, counts, weather, roadway context (110,814 rows).
+- FLAGS_2024.csv: crash-level engineered binary flags (same CRN cardinality as CRASH).
+- ROADWAY_2024.csv: segment-level context per CRN (lane count, speed limit, access control, owner, route/segment).
+- VEHICLE_2024.csv: unit-level attributes per crash (type, movement, speed, role, commercial indicator).
+- PERSON_2024.csv: person-level attributes (age, sex, injury severity, seat position, non-motorist).
+- COMMVEH_2024.csv: commercial/heavy truck details (weights, hazmat specifics).
+- CYCLE_2024.csv: motorcycle safety gear and related flags.
+- TRAILVEH_2024.csv: trailer presence and tags.
+
+Keys & Joins
+
+- Primary key: CRN.
+- Vehicle joins: CRN + UNIT_NUM.
+- Person joins: CRN + UNIT_NUM + PERSON_NUM (or aggregate by CRN).
+- Roadway joins: CRN (one or few rows per crash).
+- Strategy: build a crash-level analytics table by joining and aggregating unit/person tables to crash-level
+features.
+
+Modeling Goals
+
+- Hotspot identification: find high-accident areas for 2024.
+- Contributing factors: identify conditions/features associated with crash severity or injury outcomes.
+
+Targets
+
+- Hotspots: count of crashes per spatial unit (grid, hex, or roadway segment). Optionally also counts of injury/
+fatal crashes.
+- Severity: pick one primary target:
+    - Binary: Serious (fatal or suspected serious) vs not. From MAX_SEVERITY_LEVEL or
+FLAGS.FATAL_OR_SUSP_SERIOUS_INJ.
+    - Alternative: Any injury vs PDO (use FLAGS.INJURY or CRASH.TOT_INJ_COUNT > 0).
+- Exclude from features any outcome-derived fields used as targets (e.g., FATAL_COUNT, INJURY_COUNT,
+MAX_SEVERITY_LEVEL, related FLAGS like FATAL, INJURY).
+
+Spatial Units
+
+- Short-term: point KDE or DBSCAN/OPTICS clusters on DEC_LATITUDE/DEC_LONGITUDE.
+- Preferred: grid-based counts (e.g., ~0.5–2 km hex/bin) for stability and modeling.
+- Network-aware: aggregate by ROADWAY_2024.ROUTE/SEGMENT when focusing on corridor safety.
+- Exposure: if AADT or VMT not available, use proxies (urban/rural, speed limit, lane count, road class) and report
+limitations.
+
+Feature Candidates (Crash-Level)
+
+- From CRASH_2024:
+    - Location: DEC_LATITUDE, DEC_LONGITUDE, COUNTY, MUNICIPALITY, URBAN_RURAL.
+    - Time: CRASH_MONTH, DAY_OF_WEEK, HOUR_OF_DAY, TIME_OF_DAY.
+    - Traffic control: TCD_TYPE, TCD_FUNC_CD, INTERSECT_TYPE, INTERSECTION_RELATED.
+    - Environment: WEATHER1, WEATHER2, ILLUMINATION, ROAD_CONDITION, RDWY_SURF_TYPE_CD.
+    - Work zones: WORK_ZONE_IND, WORK_ZONE_TYPE, WORK_ZONE_LOC, WZ_*.
+    - Geometry/context: LOCATION_TYPE, RELATION_TO_ROAD.
+    - Vehicle mix: VEHICLE_COUNT, AUTOMOBILE_COUNT, SUV_COUNT, SMALL_TRUCK_COUNT, HEAVY_TRUCK_COUNT,
+MOTORCYCLE_COUNT, BUS_COUNT, NONMOTR_COUNT.
+- From FLAGS_2024 (predictors only; exclude those directly indicating outcome):
+    - Behavior: ALCOHOL_RELATED, DRUG_RELATED, DISTRACTED, SPEEDING_RELATED, TAILGATING, FATIGUE_ASLEEP.
+    - Context: INTERSECTION, LANE_DEPARTURE, RAMP, RURAL/URBAN, STATE_ROAD, TURNPIKE, WORK_ZONE, ICY_ROAD, WET_ROAD.
+    - Crash type: REAR_END, LEFT_TURN, OVERTURNED, HIT_FIXED_OBJECT, MULTIPLE_VEHICLE (as long as not tautologically
+tied to outcome label).
+- From ROADWAY_2024:
+    - Design: LANE_COUNT, ACCESS_CTRL, RDWY_ORIENT.
+    - Operating: SPEED_LIMIT, ROAD_OWNER, RAMP.
+    - Network IDs: ROUTE, SEGMENT for segment aggregation.
+- From VEHICLE_2024 (aggregate to crash-level):
+    - Mix/roles: counts by UNIT_TYPE/VEH_TYPE (e.g., presence of pedestrian, bicycle, heavy truck).
+    - Dynamics: presence of turning/merging/stopping via VEH_MOVEMENT.
+    - Speed/impact: summary stats from TRAVEL_SPD, IMPACT_POINT, PRIN_IMP_PT.
+    - Special: COMM_VEH_IND, SPECIAL_USAGE, EMERG_VEH_USE_CD, TOW_IND.
+- From PERSON_2024 (aggregate):
+    - Demographics: median/mean age, share of PERSON_TYPE categories, NON_MOTORIST involvement.
+    - Safety equipment: share with RESTRAINT_HELMET or related fields.
+    - Injury distribution: for EDA only; do not feed into severity target to avoid leakage.
+- From COMMVEH_2024/CYCLE_2024/TRAILVEH_2024 (flags/aggregates):
+    - Heavy/commercial: presence, GVWR bins, hazmat (HAZMAT_IND or release indicators).
+    - Motorcycle safety gear presence (helmet).
+    - Trailer involvement.
+
+Leakage To Avoid
+
+- Outcome fields: MAX_SEVERITY_LEVEL, FATAL_COUNT, INJURY_COUNT, TOT_INJ_COUNT, UNB_DEATH_COUNT,
+WZ_WORKERS_INJ_KILLED, and FLAGS directly implying outcome (FATAL, INJURY, etc.) when these are the labels.
+- Post-crash timing: ROADWAY_CLEARED, ARRIVAL_TM, DISPATCH_TM.
+- Derived fields that use the target definition.
+
+Hotspot Approach
+
+- Baseline: point density (KDE) maps for all crashes and serious crashes; rank top hotspots.
+    - Start with Poisson; switch to Negative Binomial if overdispersed.
+    - Predictors: lane_count, speed_limit, access control, intersection/ramp, urban/rural, flags like speeding/
+distracted, month/hour.
+    - Optional spatial smoothing or random intercepts by county to account for spatial autocorrelation.
+- Segment approach: counts per ROUTE/SEGMENT; same modeling idea if segment IDs are reliable.
+
+Severity/Contributing Factors Approach
+
+- Primary task: binary classification of serious injury/fatal vs other.
+- Models:
+    - Interpretable: regularized logistic regression; GAMs for smooth effects (hour, speed limit).
+    - High-performance: gradient boosting (XGBoost/LightGBM) with calibrated probabilities.
+- Interpretation:
+    - Global: coefficients (logistic), SHAP values (GBM).
+    - Local: example explanations for top-risk conditions.
+    - Partial dependence/ICE for key features (speed limit, illumination, intersection, weather, lane count).
+- Class imbalance: stratified sampling, class weights, threshold tuning.
+
+Validation
+
+- Spatial CV: hold out by county or spatial blocks to avoid leakage across nearby locations.
+- Temporal CV: if you have prior years, train on previous, test on 2024 for realism.
+- Hotspot evaluation: precision@k on top-N areas; stability across resamples; compare KDE vs model-based rankings.
+- Calibration: reliability curves for severity probabilities.
+
+Deliverables
+
+- Cleaned crash-level analytic dataset with joined features and a data dictionary.
+- Hotspot maps: all crashes and serious crashes; ranked lists by area/segment.
+- Factor analysis: feature importances, SHAP summaries, partial dependence.
+- Model cards: assumptions, features used, performance, limitations.
+
+Risks & Gaps
+
+- Exposure data: without AADT/VMT, hotspot counts reflect reporting density, not absolute risk. If possible,
+integrate AADT per segment.
+- Geocoding: some crashes may lack precise DEC_LAT/LONG; handle missing or low-precision points.
+- Causality: results show associations, not causal effects; be careful with behavioral flags inferred post-crash.
+
+Next Steps
+
+- Confirm targets (serious injury vs any injury vs PDO).
+- Choose spatial unit (hex size or roadway segment) and whether AADT is available.
+- I can sketch a concrete feature list and modeling spec once you confirm targets and spatial unit.
+- If you have other years or exposure datasets (AADT), I’ll incorporate them into the plan.
