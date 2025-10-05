@@ -28,3 +28,5 @@ Presentations will be hosted in /presentations
 [Traffic Volume Maps in PDFs](https://www.pa.gov/agencies/penndot/maps/traffic-volume-maps)
 
 [A Summary of Vehicle Detection and Surveillance Technologies use in Intelligent Transportation Systems](https://www.fhwa.dot.gov/policyinformation/pubs/vdstits2007/04.cfm#:~:text=GENERAL%20DESCRIPTION%20OF%20EQUIPMENT:%20Portable,volt%2C%2012%20amp%20rechargeable%20battery.)
+
+[2023 PennDOT Highway Statistics](https://gis.penndot.pa.gov/BPR_PDF_FILES/Documents/Traffic/Highway_Statistics/Annual_Report/2024/2023_Pub_600.pdf)
