@@ -1,0 +1,38 @@
+GLM Summary Interpretation (H3 Grid Crash Frequency)
+
+Model
+- Family/Link: Negative Binomial with log link (counts per H3 cell)
+- Response: CRASH_COUNT_CELL
+- Offset: EXPOSURE_AADT_MXM_365 (defaults to 1.0 here; modeling counts, not rates)
+- Observations: 30,419 H3 cells
+- Fit: Pseudo R² (CS) ≈ 0.315; Deviance ≈ 13,831; Iterations: 100
+
+Key Findings (interpret coefficients as log rate ratios; exp(coef) is the rate ratio)
+- VEHICLE_COUNT: coef ≈ 0.551 (p<0.001) → RR ≈ 1.74
+  Cells with higher average vehicles per crash have higher crash counts.
+- HEAVY_TRUCK_COUNT: coef ≈ 0.174 (p<0.001) → RR ≈ 1.19
+  Greater heavy-truck presence associates with higher crash counts.
+- WEATHER1_7 (Rain) share: coef ≈ 0.200 (p≈0.006) → RR ≈ 1.22 per 100%-point; ≈ +2% per +10%-points.
+- ROAD_CONDITION_8 (Water): coef ≈ 0.317 (p≈0.055) → borderline positive; ≈ +3.7% per +10%-points.
+
+Unstable / Not Interpretable As-Is
+- URBAN_RURAL shares show huge, non-significant coefficients → collinearity (shares sum to 1 + intercept).
+- INTERSECTION_RELATED_SHARE, ILLUMINATION_nan_SHARE are not significant and may reflect sparse/placeholder buckets.
+
+Caveats
+- No true exposure: AADT × segment length per cell is not available (GEOMETRY empty). Model currently fits counts, which inflates effects for cells with more roadway/exposure.
+- Category shares: For each categorical family, shares sum to 1. Keep a reference level (or drop intercept) to avoid non-identifiability.
+
+Recommendations
+1) Add true exposure: compute EXPOSURE = Σ(CURR_AADT × length_in_hex × 365) from AADT polylines clipped to H3 cells; retrain.
+2) Fix collinearity: drop one reference level for URBAN_RURAL, WEATHER, ROAD_CONDITION, RDWY_SURF_TYPE_CD (and remove any *_nan_SHARE predictors).
+3) Refine predictors: replace VEHICLE_COUNT with crash-type mix (e.g., share multi-vehicle, rear-end, turning) and include WZ_* predictors; keep heavy-truck presence.
+4) Compare models: try Poisson (config: model.type=glm_poisson) and later GBM (Poisson/Tweedie) with SHAP for factor ranking.
+
+Quick Interpretation Cheatsheet
+- exp(coef) > 1: factor increases expected crash count.
+- exp(coef) < 1: factor decreases expected crash count.
+- For share features: a +10%-point change approximates 0.1 × coef on log scale (small-coef rule of thumb).
+
+Provenance
+- Results summarized from model_artifacts/glm/glm_summary.txt produced by src/04_train_model.py on data/aggregates/h3_features.csv at H3 res=8.
