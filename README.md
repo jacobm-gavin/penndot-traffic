@@ -31,4 +31,4 @@ Presentations will be hosted in /presentations
 
 [2023 PennDOT Highway Statistics](https://gis.penndot.pa.gov/BPR_PDF_FILES/Documents/Traffic/Highway_Statistics/Annual_Report/2024/2023_Pub_600.pdf)
 
-[Crash Data Dictionary](https://documentcloud.adobe.com/spodintegration/index.html#)
+[Crash Data Dictionary]([https://documentcloud.adobe.com/spodintegration/index.html#](https://gis.penndot.pa.gov/gishub/crashZip/Crash_Data_Dictionary_2025.pdf))
