@@ -1,0 +1,94 @@
+How do we want to define areas?
+(coordinates?, roads?)
+
+Which "areas" have highest crash rates (ranked)
+
+Of the areas with highest crash rates, what do they have in common?
+
+How do we join crash data with penndot spatial data?
+
+How do we normalize crash data? (e.g. obviously philadelphia has a high number)
+
+
+COLUMNS
+
+WORKERS_PRES
+WORK_ZONE_IND
+WORK_ZONE_LOC
+WORK_ZONE_TYPE
+WZ_CLOSE_DETOUR
+WZ_FLAGGER
+WZ_LAW_OFFICEDR_IND
+WZ_MOVING
+WZ_OTHER
+WZ_WORKERS_INJ_KILLED
+
+
+# NEXT STEPS
+Figure out how to join FLAGS and CRASH
+Narrow in on which columns will be important
+
+ere’s a concise modeling path tailored to your 2024 PennDOT files.
+
+Best-Fit Models
+
+- Poisson/NB regression: Count model for crashes per road segment
+with log link; add offset = log(exposure) to get rates.
+- Zero-inflated/hurdle: Handles many zero-crash segments if needed.
+- GAM/GAMM: Adds smooth nonlinearity for variables like speed,
+lanes; optional random effects by county/route.
+- Bayesian spatial NB: Adds corridor/county random effects and
+spatial structure to stabilize small-sample segments.
+- Gradient boosting (Poisson/Tweedie): High accuracy for “hot
+segment” ranking; use SHAP for factor importance.
+- HSM-style EB: Build a Safety Performance Function (NB + offset)
+for robust hotspot flags.
+
+How to Use Your Files
+
+- Unit: Aggregate to segment-year using ROADWAY_2024 keys (ROUTE,
+SEGMENT, STREET_NAME, ACCESS_CTRL, LANE_COUNT, SPEED_LIMIT,
+ROAD_OWNER).
+- Target: Crash count per segment from CRASH_2024 (join via CRN
+already appears in ROADWAY_2024), optionally severity-weighted
+(e.g., EPDO using MAX_SEVERITY_LEVEL).
+- Exposure: If AADT isn’t available, use proxies: length (if
+available), lane-miles (LANE_COUNT × length), urban/rural
+(URBAN_RURAL), functional class/ACCESS_CTRL. If you can add AADT
+later, use offset = log(AADT × length × 365).
+- Features: Roadway attributes from ROADWAY_2024, crash-context
+flags from FLAGS_2024 (e.g., INTERSECTION, RAMP, LANE_DEPARTURE,
+SPEEDING_RELATED, URBAN), plus county/municipality indicators from
+CRASH_2024. Vehicle mix from VEHICLE_2024 (e.g., heavy trucks)
+if aggregating.
+
+Recommended Baseline
+
+- Negative Binomial GLM: crashes ~ access_control + lane_count +
+speed_limit + urban + intersection_density + ramp + road_owner +
+county + (optional splines) with offset=log(exposure).
+- Outputs: Predicted rate, risk ratio vs statewide average, 95%
+CIs. Flag segments where predicted or EB-adjusted rate > average by
+set threshold.
+
+Identifying Contributing Factors
+
+- Interpret NB/GAM coefficients and partial dependence to quantify
+effect sizes.
+- For boosted models, use SHAP values to rank factors; validate
+agreement with GLM signs.
+- Report factors separately by context (e.g., intersections, ramps,
+urban arterials).
+
+Validation
+
+- Check overdispersion to justify NB vs Poisson.
+- Test zero inflation (Vuong test); add ZI if warranted.
+- Spatial residual autocorrelation (Moran’s I); add spatial/random
+effects if needed.
+- Cross-validate by county/corridor blocks to avoid leakage.
+
+If you want, I can prototype the baseline NB aggregation: build
+segment-level counts from CRASH_2024, join ROADWAY_2024, construct
+exposure proxies, and fit an initial model with interpretable
+outputs.
