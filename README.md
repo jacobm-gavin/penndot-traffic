@@ -12,7 +12,7 @@ Presentations will be hosted in /presentations
 
 
 ## Links to our files, data dictionaries, and supplementary resources:
-[Crash Data (Downloadable)](https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990)
+[Crash Data (Downloadable)]([https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990](https://experience.arcgis.com/experience/51809b06e7b140208a4ed6fbad964990))
 
 [Penn DOT spatial data](https://data-pennshare.opendata.arcgis.com/)
 
