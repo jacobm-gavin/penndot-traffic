@@ -1,0 +1,51 @@
+response: CRASH_COUNT_CELL
+offset: EXPOSURE_AADT_MXM_365
+
+# Include/exclude allow exact names or regex patterns.
+include:
+  - ^URBAN_RURAL
+  - ^INTERSECTION_RELATED
+  - ^WORK_ZONE_IND
+  - ^WORK_ZONE_TYPE
+  - ^WORK_ZONE_LOC
+  - ^WZ_
+  - ^WEATHER1_
+  - ^WEATHER2_
+  - ^ILLUMINATION_
+  - ^ROAD_CONDITION_
+  - ^RDWY_SURF_TYPE_CD_
+  - ^TCD_TYPE_
+  - ^TCD_FUNC_CD_
+  - ^VEHICLE_COUNT$
+  - ^HEAVY_TRUCK_COUNT$
+  - ^PATT_.*_SHARE$
+
+exclude:
+  - ^WZ_WORKERS_INJ_KILLED$
+  - ^MAX_SEVERITY_LEVEL$
+  - ^FATAL_COUNT$
+  - ^INJURY_COUNT$
+  - ^TOT_INJ_COUNT$
+  - ^UNB_DEATH_COUNT$
+  - ^SERIOUS_COUNT_CELL$
+
+categorical:
+  - URBAN_RURAL
+  - WORK_ZONE_IND
+  - WORK_ZONE_TYPE
+  - WORK_ZONE_LOC
+  - TCD_TYPE
+  - TCD_FUNC_CD
+  - ILLUMINATION
+  - ROAD_CONDITION
+  - RDWY_SURF_TYPE_CD
+  - WEATHER1
+  - WEATHER2
+
+min_cat_freq: 0.01
+
+model:
+  type: glm_nb  # options: glm_nb, glm_poisson
+  regularization: none
+  test_size: 0.2
+  random_state: 42
