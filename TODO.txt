@@ -1,0 +1,413 @@
+================================================================================
+PROJECT GOAL: Identify Significant Factors for Traffic Accident Frequency
+================================================================================
+
+OBJECTIVE: Use Pennsylvania traffic accident data to determine which factors are 
+significant in determining how often accidents occur on the road, normalized by 
+traffic exposure.
+
+================================================================================
+AVAILABLE DATA FILES
+================================================================================
+
+CORE CRASH DATA:
+1. CRASH_2024.csv (110,814 rows, 47 MB)
+   - Crash-level records keyed by CRN (Crash Report Number)
+   - Location: DEC_LATITUDE, DEC_LONGITUDE, COUNTY, MUNICIPALITY
+   - Time: CRASH_MONTH, DAY_OF_WEEK, HOUR_OF_DAY, TIME_OF_DAY
+   - Environment: WEATHER1/2, ILLUMINATION, ROAD_CONDITION, RDWY_SURF_TYPE_CD
+   - Traffic Control: TCD_TYPE, INTERSECT_TYPE, TCD_FUNC_CD
+   - Work Zones: WORK_ZONE_IND and related WZ_* variables
+   - Counts: VEHICLE_COUNT, HEAVY_TRUCK_COUNT, AUTOMOBILE_COUNT, etc.
+   - Severity: MAX_SEVERITY_LEVEL, FATAL_COUNT, INJURY_COUNT (exclude as predictors)
+
+2. FLAGS_2024.csv (110,814 rows, 56 MB)
+   - Engineered binary crash-level flags (same CRN cardinality)
+   - Behavioral: ALCOHOL_RELATED, DRUG_RELATED, DISTRACTED, SPEEDING_RELATED, 
+                 TAILGATING, FATIGUE_ASLEEP
+   - Context: INTERSECTION, LANE_DEPARTURE, RAMP, WORK_ZONE, ICY_ROAD, WET_ROAD,
+              STATE_ROAD, TURNPIKE
+   - Crash Types: REAR_END, LEFT_TURN, OVERTURNED, HIT_FIXED_OBJECT, MULTIPLE_VEHICLE
+   - Outcome: FATAL, INJURY, FATAL_OR_SUSP_SERIOUS_INJ (exclude as predictors)
+
+3. ROADWAY_2024.csv (174,250 rows, 14 MB)
+   - Crash-roadway context (one or more rows per CRN)
+   - Design: LANE_COUNT, ACCESS_CTRL, SPEED_LIMIT, RDWY_ORIENT, RAMP, ROAD_OWNER
+   - Network IDs: ROUTE, SEGMENT
+
+4. VEHICLE_2024.csv (197,507 rows, 36 MB)
+   - Unit-level vehicle records keyed by CRN + UNIT_NUM
+   - Attributes: UNIT_TYPE, VEH_TYPE, VEH_MOVEMENT, TRAVEL_SPD, COMM_VEH_IND,
+                 SPECIAL_USAGE, PRIN_IMP_PT, TOW_IND
+
+5. PERSON_2024.csv (244,174 rows, 26 MB)
+   - Person-level records keyed by CRN + UNIT_NUM + PERSON_NUM
+   - Demographics: AGE, SEX, PERSON_TYPE
+   - Safety: RESTRAINT_HELMET, INJ_SEVERITY, NON_MOTORIST
+
+6. COMMVEH_2024.csv (8,717 rows, 1.6 MB)
+   - Commercial vehicle details: GVWR, HAZMAT_IND, carrier info
+
+7. CYCLE_2024.csv (3,427 rows, 308 KB)
+   - Motorcycle safety gear: MC_DVR_HLMTON_IND and attributes
+
+8. TRAILVEH_2024.csv (5,180 rows, 312 KB)
+   - Trailer presence and type
+
+TRAFFIC VOLUME DATA:
+9. RMSTRAFFIC.csv
+   - Road segment traffic volume data
+   - CUR_AADT (Average Annual Daily Traffic) - CRITICAL for normalization
+   - ST_RT_NO, SEGMENT info, TRAFF_PATT_GRP, GEOMETRY
+
+H3 SPATIAL AGGREGATION FILES:
+10. CRASH_2024_h3.csv - Crashes aggregated to H3 hexagonal cells
+11. H3_res8_exposure.csv - Exposure data at H3 resolution 8
+12. aggregates/h3_features.csv - Pre-computed H3-level features
+
+H3 Resolution 8: ~0.46 km² per hexagon, ~0.74 km average edge length
+
+================================================================================
+KEY PREDICTOR VARIABLES (from columnspecs.md)
+================================================================================
+
+TEMPORAL:
+- CRASH_MONTH, DAY_OF_WEEK, HOUR_OF_DAY, TIME_OF_DAY
+
+ENVIRONMENTAL:
+- WEATHER1, WEATHER2, ILLUMINATION, ROAD_CONDITION, RDWY_SURF_TYPE_CD
+- WET_ROAD, ICY_ROAD
+
+ROADWAY DESIGN:
+- LANE_COUNT, SPEED_LIMIT, ACCESS_CTRL, RDWY_ORIENT, ROAD_OWNER
+- RAMP, INTERSECTION_RELATED, INTERSECT_TYPE
+
+TRAFFIC CONTROL:
+- TCD_TYPE (Traffic Control Device), TCD_FUNC_CD
+- WORK_ZONE_IND and related WZ_* variables (WZ_CLOSE_DETOUR, WZ_FLAGGER, 
+  WZ_LAW_OFFCR_IND, WZ_LN_CLOSURE, WZ_MOVING, WZ_OTHER, WZ_SHLDER_MDN)
+
+GEOGRAPHIC/ADMINISTRATIVE:
+- COUNTY, MUNICIPALITY, URBAN_RURAL
+- STATE_ROAD, TURNPIKE
+
+BEHAVIORAL FLAGS:
+- ALCOHOL_RELATED, DRUG_RELATED, DISTRACTED, SPEEDING_RELATED
+- TAILGATING, FATIGUE_ASLEEP
+
+CRASH CONTEXT:
+- LOCATION_TYPE, RELATION_TO_ROAD
+- LANE_DEPARTURE, REAR_END, LEFT_TURN, OVERTURNED, HIT_FIXED_OBJECT
+
+VEHICLE MIX:
+- VEHICLE_COUNT, AUTOMOBILE_COUNT, SUV_COUNT, HEAVY_TRUCK_COUNT
+- MOTORCYCLE_COUNT, BUS_COUNT, NONMOTR_COUNT, SMALL_TRUCK_COUNT
+- COMM_VEH_IND (commercial vehicle indicator)
+
+EXPOSURE/TRAFFIC VOLUME:
+- CUR_AADT (from RMSTRAFFIC - Current Average Annual Daily Traffic)
+- TRAFF_PATT_GRP (Traffic Pattern Group)
+
+VEHICLE-LEVEL AGGREGATIONS:
+- UNIT_TYPE, VEH_TYPE, VEH_MOVEMENT, TRAVEL_SPD, SPECIAL_USAGE, PRIN_IMP_PT
+
+PERSON-LEVEL AGGREGATIONS:
+- AGE, SEX, PERSON_TYPE, NON_MOTORIST, RESTRAINT_HELMET
+
+COMMERCIAL VEHICLE:
+- HAZMAT_IND (from COMMVEH_2024), GVWR
+
+MOTORCYCLE:
+- MC_DVR_HLMTON_IND (from CYCLE_2024)
+
+VARIABLES TO EXCLUDE (LEAKAGE RISK):
+- MAX_SEVERITY_LEVEL, FATAL_COUNT, INJURY_COUNT, UNB_DEATH_COUNT
+- UNB_SUSP_SERIOUS_INJ_COUNT, BELTED_DEATH_COUNT, BICYCLE_DEATH_COUNT
+- MCYCLE_DEATH_COUNT
+- FLAGS: FATAL, INJURY, FATAL_OR_SUSP_SERIOUS_INJ, INJURY_OR_FATAL
+- FLAGS: SUSPECTED_SERIOUS_INJURY, SUSPECTED_MINOR_INJURY
+- PERSON_2024/INJ_SEVERITY
+
+================================================================================
+IMPLEMENTATION PLAN
+================================================================================
+
+STEP 1: CREATE AGGREGATED ANALYSIS DATASET
+-------------------------------------------
+Goal: Build H3 cell-level dataset with crash counts and aggregated features
+
+Tasks:
+- Load CRASH_2024_h3.csv and H3_res8_exposure.csv
+- Join to get crash counts per H3 cell with exposure metrics (CUR_AADT)
+- Aggregate predictor variables from FLAGS_2024, ROADWAY_2024, CRASH_2024 to H3 level
+  * Categorical: Use mode (dominant category) per cell
+  * Numeric: Use mean or sum as appropriate
+  * Binary flags: Compute proportion/rate per cell
+- Handle multi-level data:
+  * VEHICLE_2024: Compute per-crash summaries first (e.g., max TRAVEL_SPD, 
+    proportion COMM_VEH_IND)
+  * PERSON_2024: Compute per-crash summaries (e.g., mean AGE, proportion male)
+  * Then aggregate crash-level summaries to H3 cells
+- Output: h3_analysis_dataset.csv
+
+STEP 2: ENGINEER SPATIAL-TEMPORAL FEATURES
+-------------------------------------------
+Goal: Create meaningful features for modeling
+
+Tasks:
+- Temporal patterns:
+  * Crash counts by HOUR_OF_DAY bins (morning rush, afternoon, evening rush, night)
+  * Crash counts by DAY_OF_WEEK (weekday vs. weekend)
+  * Crash counts by CRASH_MONTH (seasonal patterns)
+- Environmental condition proportions per H3 cell:
+  * Percentage WET_ROAD, ICY_ROAD
+  * Distribution of WEATHER1 categories
+  * Distribution of ILLUMINATION categories
+- Roadway characteristics per H3 cell:
+  * Average SPEED_LIMIT
+  * Average LANE_COUNT
+  * Mode URBAN_RURAL
+  * Proportion with ACCESS_CTRL
+- Behavioral flag rates per H3 cell:
+  * ALCOHOL_RELATED percentage
+  * SPEEDING_RELATED percentage
+  * DISTRACTED percentage
+  * DRUG_RELATED percentage
+- Crash type distributions per H3 cell:
+  * REAR_END, LEFT_TURN, OVERTURNED, HIT_FIXED_OBJECT rates
+- Traffic control distributions:
+  * TCD_TYPE distribution
+  * INTERSECTION_RELATED rate
+- Output: Enhanced h3_analysis_dataset.csv with engineered features
+
+STEP 3: BUILD REGRESSION MODELS
+--------------------------------
+Goal: Model crash frequency and identify significant factors
+
+Tasks:
+A. Baseline Model - Poisson/Negative Binomial GLM:
+   - Target: Crash count per H3 cell
+   - Offset: log(CUR_AADT) to normalize by exposure
+   - Predictors: Start with key variables from columnspecs.md Predictors section
+   - Check for overdispersion (variance > mean indicates need for Negative Binomial)
+   - Extract coefficients, p-values, confidence intervals
+   - Identify significant factors (p < 0.05)
+
+B. Advanced Model - Gradient Boosting:
+   - Use XGBoost or LightGBM with Poisson deviance objective
+   - Same target and offset structure
+   - Include all available predictors (let model handle selection)
+   - Hyperparameter tuning via cross-validation
+   - Extract SHAP values for feature importance
+   - Calculate permutation importance
+
+C. Consider Zero-Inflation:
+   - Assess zero-inflation: count cells with zero crashes
+   - If significant (>30% zeros), fit zero-inflated or hurdle models
+   - Model presence/absence separately from count given presence
+
+STEP 4: IMPLEMENT SPATIAL CROSS-VALIDATION
+-------------------------------------------
+Goal: Prevent spatial autocorrelation from inflating performance
+
+Tasks:
+- Define spatial blocks:
+  * Option 1: Hold out entire counties
+  * Option 2: Create geographic clusters using lat/long of H3 cell centroids
+  * Option 3: Grid-based spatial blocking
+- Implement k-fold spatial CV (k=5 or 10)
+- For each fold:
+  * Train on all cells except held-out spatial block
+  * Test on held-out spatial block
+  * Record performance metrics (deviance, RMSE, MAE)
+- Check residual spatial patterns:
+  * Calculate Moran's I on residuals
+  * Map residuals to identify spatial clustering
+- Assess overdispersion in validation sets
+- Report cross-validated performance
+
+STEP 5: EXTRACT AND RANK SIGNIFICANT FACTORS
+---------------------------------------------
+Goal: Identify which factors most strongly influence accident frequency
+
+Tasks:
+- From GLM (Interpretable):
+  * Extract coefficients with 95% confidence intervals
+  * Rank by absolute coefficient magnitude
+  * Filter to significant predictors (p < 0.05)
+  * Interpret: exp(coefficient) = multiplicative effect on crash rate
+  
+- From Gradient Boosting (Predictive):
+  * Compute SHAP values (average absolute SHAP per feature)
+  * Compute permutation importance
+  * Rank features by both metrics
+  * Create SHAP summary plots for top 20 features
+  
+- Synthesize findings:
+  * Identify factors consistent across both model types
+  * Categorize by factor type (temporal/environmental/roadway/behavioral)
+  * Quantify effect sizes
+  * Create visualizations of top factors
+
+- Output deliverables:
+  * Table: Top 20 significant factors with effect sizes
+  * Plots: Coefficient plot (GLM), SHAP summary plot (GBM)
+  * Report: Interpretation of findings for data science class
+
+================================================================================
+FURTHER CONSIDERATIONS & DECISIONS NEEDED
+================================================================================
+
+1. SPATIAL UNIT DECISION:
+   Options:
+   A. Continue with H3 hexagons (RECOMMENDED)
+      - Already computed and theoretically sound
+      - Better for spatial modeling
+      - Consistent cell sizes
+      - Good for visualization
+   B. Switch to road segment-level
+      - Use ROUTE/SEGMENT from ROADWAY_2024 + RMSTRAFFIC
+      - Better for actionable road maintenance recommendations
+      - More directly linked to infrastructure decisions
+   
+   Recommendation: Start with H3 for modeling, then map results back to road 
+   segments for actionable insights
+
+2. MULTI-LEVEL DATA AGGREGATION STRATEGY:
+   Question: How to aggregate vehicle-level and person-level data?
+   
+   Proposed approach:
+   - VEHICLE_2024: Create per-crash aggregations
+     * Max/mean TRAVEL_SPD per crash
+     * Proportion commercial vehicles (COMM_VEH_IND) per crash
+     * Dominant VEH_TYPE per crash
+     * Count of each VEH_TYPE per crash
+   - PERSON_2024: Create per-crash aggregations
+     * Mean/median/max AGE per crash
+     * Proportion male/female per crash
+     * Proportion with RESTRAINT_HELMET per crash
+     * Count by PERSON_TYPE per crash
+   - Then aggregate crash-level summaries to H3 cells (mean, sum, or rate)
+
+3. ZERO-INFLATION MODELING:
+   Question: Many H3 cells likely have zero crashes - use special models?
+   
+   Approach:
+   - First, check zero-inflation rate in dataset
+   - If <20% zeros: Use standard Negative Binomial
+   - If 20-40% zeros: Compare NB vs. zero-inflated NB
+   - If >40% zeros: Use zero-inflated or hurdle model
+   - Separate models: Presence (logistic) vs. Count (truncated Poisson/NB)
+
+4. VARIABLE SELECTION:
+   With 70+ potential predictors, need selection strategy:
+   - Start with domain knowledge (columnspecs.md Predictors)
+   - Check correlation matrix, remove highly correlated pairs (r > 0.8)
+   - Use LASSO or elastic net for GLM to shrink coefficients
+   - Let gradient boosting handle selection naturally
+   - Compare results across methods for robustness
+
+5. EXPOSURE NORMALIZATION:
+   Critical question: How is CUR_AADT mapped to H3 cells?
+   - Need to understand H3_res8_exposure.csv structure
+   - May need to aggregate RMSTRAFFIC road segments to H3 cells
+   - Consider: Average AADT, sum AADT, or weighted AADT per cell
+   - Validate: Check correlation between AADT and crash counts
+
+================================================================================
+ANALYSIS ALREADY COMPLETED
+================================================================================
+
+From Penndot_Traffic.ipynb:
+- Basic exploratory visualization
+- Scatterplot of all crashes by lat/long (maps Pennsylvania)
+- Removed crashes with missing coordinates (110,655 valid / 110,813 total)
+- Created 100x100 grid heatmap of crash density
+- Saved: "BlackAndWhite_CrashHeatMap.png"
+
+Status: Early stage - only basic visualization complete. No modeling yet.
+
+================================================================================
+METHODOLOGICAL REFERENCES
+================================================================================
+
+PROPOSED MODELING APPROACHES:
+
+For Hotspot Identification:
+- Poisson/Negative Binomial regression with log(exposure) offset
+- Zero-inflated/hurdle models for cells with many zeros
+- GAM/GAMM with smooth effects and random county/route effects
+- Bayesian spatial NB with spatial autocorrelation
+- Gradient boosting (Poisson/Tweedie) with SHAP for factor importance
+
+For Severity/Contributing Factors:
+- Binary classification: Fatal/Serious injury vs. Other
+- Logistic regression (interpretable)
+- Gradient boosting (XGBoost/LightGBM) with calibrated probabilities
+- GAMs for smooth effects of continuous variables
+
+Validation Strategy:
+- Spatial cross-validation (hold out by county or spatial blocks)
+- Check overdispersion, zero inflation
+- Moran's I for spatial autocorrelation in residuals
+- Calibration curves for probabilities
+
+Referenced Literature:
+1. Yuan et al. 2018 (Iowa): Hetero-ConvLSTM, 5km×5km grids, LSTM for spatio-temporal
+2. Ghandour et al. (Lebanon): Segment-level hazard values based on crashes/length/time
+3. Rahim & Hassan: Binary crash data → pixel matrices (3×3) for image-based modeling
+
+Key Gaps Identified:
+- Exposure data needed for normalization (AADT critical) ✓ Have RMSTRAFFIC
+- Geocoding quality (some missing coordinates) ✓ 99.86% geocoded
+- Causality vs. association (behavioral flags inferred post-crash)
+- Need spatial cross-validation to avoid leakage
+
+================================================================================
+NEXT IMMEDIATE ACTIONS
+================================================================================
+
+1. Examine H3_res8_exposure.csv structure to understand exposure data format
+2. Load and explore h3_features.csv to see what aggregations already exist
+3. Decide on final spatial unit (H3 vs. segments) - RECOMMEND H3
+4. Create master joined dataset at H3 cell level with all predictors
+5. Implement aggregation strategy for multi-level data (vehicle, person)
+6. Integrate RMSTRAFFIC.CUR_AADT exposure normalization
+7. Build baseline Poisson/NB GLM with key predictors
+8. Assess overdispersion and zero-inflation
+9. Implement spatial cross-validation framework
+10. Build gradient boosting model with SHAP analysis
+11. Extract, rank, and visualize significant factors
+12. Create summary report for data science class
+
+================================================================================
+CURRENT CHALLENGES
+================================================================================
+
+- Large number of variables (99 columns in CRASH alone) requires careful feature 
+  engineering and selection to avoid redundancy and overfitting
+- Need to balance interpretability (GLM) vs. predictive power (gradient boosting)
+- Exposure normalization is critical but complex (how to map road segment AADT 
+  to H3 cells?)
+- Behavioral flags (ALCOHOL_RELATED, etc.) are post-crash inferences, not causes
+- Spatial autocorrelation must be handled properly in validation
+- Zero-inflation may require specialized models
+- Multi-level data (crash/vehicle/person) requires careful aggregation strategy
+
+================================================================================
+PROJECT TIMELINE
+================================================================================
+
+Current Status: Week 6-9 of project (early data exploration phase)
+Team: Jacob Gavin, Logan Camacho, Samuel Adebayo
+
+Remaining Work:
+- Feature selection and engineering
+- Model training and validation
+- Factor significance analysis
+- Scaling from county to statewide
+- Final report and presentation
+
+================================================================================
+END OF SPECIFICATIONS
+================================================================================
