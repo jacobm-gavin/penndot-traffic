@@ -1,0 +1,961 @@
+%% bare_jrnl.tex
+%% V1.4b
+%% 2015/08/26
+%% by Michael Shell
+%% see http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.8b or later) with an IEEE
+%% journal paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/pkg/ieeetran
+%% and
+%% http://www.ieee.org/
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall the IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%*************************************************************************
+
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. The IEEE's font choices and paper sizes can   ***
+% *** trigger bugs that do not appear when using other class files.       ***                          ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+\documentclass[journal]{IEEEtran}
+\usepackage{url}
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[journal]{../sty/IEEEtran}
+
+
+
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/pkg/ifpdf
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+
+
+
+
+
+% *** CITATION PACKAGES ***
+%
+%\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
+% \cite{} output to follow that of the IEEE. Loading the cite package will
+% result in citation numbers being automatically sorted and properly
+% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
+% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
+% \cite will automatically add leading space, if needed. Use cite.sty's
+% noadjust option (cite.sty V3.8 and later) if you want to turn this off
+% such as if a citation ever needs to be enclosed in parenthesis.
+% cite.sty is already installed on most LaTeX systems. Be sure and use
+% version 5.0 (2009-03-20) and later if using hyperref.sty.
+% The latest version can be obtained at:
+% http://www.ctan.org/pkg/cite
+% The documentation is contained in the cite.sty file itself.
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\usepackage{placeins}
+\ifCLASSINFOpdf
+   \usepackage[pdftex]{graphicx}
+\usepackage{subcaption}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation
+% can be obtained at: 
+% http://www.ctan.org/pkg/graphicx
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found at:
+% http://www.ctan.org/pkg/epslatex
+%
+% latex, and pdflatex in dvi mode, support graphics in encapsulated
+% postscript (.eps) format. pdflatex in pdf mode supports graphics
+% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
+% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
+% not a bitmapped formats (.jpeg, .png). The IEEE frowns on bitmapped formats
+% which can result in "jaggedy"/blurry rendering of lines and letters as
+% well as large increases in file sizes.
+%
+% You can find documentation about the pdfTeX application at:
+% http://www.tug.org/applications/pdftex
+
+
+
+
+
+% *** MATH PACKAGES ***
+%
+%\usepackage{amsmath}
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics.
+%
+% Note that the amsmath package sets \interdisplaylinepenalty to 10000
+% thus preventing page breaks from occurring within multiline equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks as IEEEtran.cls normally
+% does. amsmath.sty is already installed on most LaTeX systems. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/pkg/amsmath
+
+
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+% You can use the algorithmic environment in-text or within a figure
+% environment to provide for a floating algorithm. Do NOT use the algorithm
+% floating environment provided by algorithm.sty (by the same authors) or
+% algorithm2e.sty (by Christophe Fiorio) as the IEEE does not use dedicated
+% algorithm float types and packages that provide these will not provide
+% correct IEEE style captions. The latest version and documentation of
+% algorithmic.sty can be obtained at:
+% http://www.ctan.org/pkg/algorithms
+% Also of interest may be the (relatively newer and more customizable)
+% algorithmicx.sty package by Szasz Janos:
+% http://www.ctan.org/pkg/algorithmicx
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. As the default LaTeX2e table
+% generation code is lacking to the point of almost being broken with
+% respect to the quality of the end results, all users are strongly
+% advised to use an enhanced (at the very least that provided by array.sty)
+% set of table tools. array.sty is already installed on most systems. The
+% latest version and documentation can be obtained at:
+% http://www.ctan.org/pkg/array
+
+
+% IEEEtran contains the IEEEeqnarray family of commands that can be used to
+% generate multiline equations as well as matrices, tables, etc., of high
+% quality.
+
+
+
+
+% *** SUBFIGURE PACKAGES ***
+%\ifCLASSOPTIONcompsoc
+%  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+%\else
+%  \usepackage[caption=false,font=footnotesize]{subfig}
+%\fi
+% subfig.sty, written by Steven Douglas Cochran, is the modern replacement
+% for subfigure.sty, the latter of which is no longer maintained and is
+% incompatible with some LaTeX packages including fixltx2e. However,
+% subfig.sty requires and automatically loads Axel Sommerfeldt's caption.sty
+% which will override IEEEtran.cls' handling of captions and this will result
+% in non-IEEE style figure/table captions. To prevent this problem, be sure
+% and invoke subfig.sty's "caption=false" package option (available since
+% subfig.sty version 1.3, 2005/06/28) as this is will preserve IEEEtran.cls
+% handling of captions.
+% Note that the Computer Society format requires a larger sans serif font
+% than the serif footnote size font used in traditional IEEE formatting
+% and thus the need to invoke different subfig.sty package options depending
+% on whether compsoc mode has been enabled.
+%
+% The latest version and documentation of subfig.sty can be obtained at:
+% http://www.ctan.org/pkg/subfig
+
+
+
+
+% *** FLOAT PACKAGES ***
+%
+%\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
+% single column figure to be placed prior to an earlier double column
+% figure.
+% Be aware that LaTeX2e kernels dated 2015 and later have fixltx2e.sty's
+% corrections already built into the system in which case a warning will
+% be issued if an attempt is made to load fixltx2e.sty as it is no longer
+% needed.
+% The latest version and documentation can be found at:
+% http://www.ctan.org/pkg/fixltx2e
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
+% LaTeX2e). It also provides a command:
+%\fnbelowfloat
+% to enable the placement of footnotes below bottom floats (the standard
+% LaTeX2e kernel puts them above bottom floats). This is an invasive package
+% which rewrites many portions of the LaTeX2e float routines. It may not work
+% with other packages that modify the LaTeX2e float routines. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/pkg/stfloats
+% Do not use the stfloats baselinefloat ability as the IEEE does not allow
+% \baselineskip to stretch. Authors submitting work to the IEEE should note
+% that the IEEE rarely uses double column equations and that authors should try
+% to avoid such use. Do not be tempted to use the cuted.sty or midfloat.sty
+% packages (also by Sigitas Tolusis) as the IEEE does not format its papers in
+% such ways.
+% Do not attempt to use stfloats with fixltx2e as they are incompatible.
+% Instead, use Morten Hogholm'a dblfloatfix which combines the features
+% of both fixltx2e and stfloats:
+%
+% \usepackage{dblfloatfix}
+% The latest version can be found at:
+% http://www.ctan.org/pkg/dblfloatfix
+
+
+
+
+%\ifCLASSOPTIONcaptionsoff
+%  \usepackage[nomarkers]{endfloat}
+% \let\MYoriglatexcaption\caption
+% \renewcommand{\caption}[2][\relax]{\MYoriglatexcaption[#2]{#2}}
+%\fi
+% endfloat.sty was written by James Darrell McCauley, Jeff Goldberg and 
+% Axel Sommerfeldt. This package may be useful when used in conjunction with 
+% IEEEtran.cls'  captionsoff option. Some IEEE journals/societies require that
+% submissions have lists of figures/tables at the end of the paper and that
+% figures/tables without any captions are placed on a page by themselves at
+% the end of the document. If needed, the draftcls IEEEtran class option or
+% \CLASSINPUTbaselinestretch interface can be used to increase the line
+% spacing as well. Be sure and use the nomarkers option of endfloat to
+% prevent endfloat from "marking" where the figures would have been placed
+% in the text. The two hack lines of code above are a slight modification of
+% that suggested by in the endfloat docs (section 8.4.1) to ensure that
+% the full captions always appear in the list of figures/tables - even if
+% the user used the short optional argument of \caption[]{}.
+% IEEE papers do not typically make use of \caption[]'s optional argument,
+% so this should not be an issue. A similar trick can be used to disable
+% captions of packages such as subfig.sty that lack options to turn off
+% the subcaptions:
+% For subfig.sty:
+% \let\MYorigsubfloat\subfloat
+% \renewcommand{\subfloat}[2][\relax]{\MYorigsubfloat[]{#2}}
+% However, the above trick will not work if both optional arguments of
+% the \subfloat command are used. Furthermore, there needs to be a
+% description of each subfigure *somewhere* and endfloat does not add
+% subfigure captions to its list of figures. Thus, the best approach is to
+% avoid the use of subfigure captions (many IEEE journals avoid them anyway)
+% and instead reference/explain all the subfigures within the main caption.
+% The latest version of endfloat.sty and its documentation can obtained at:
+% http://www.ctan.org/pkg/endfloat
+%
+% The IEEEtran \ifCLASSOPTIONcaptionsoff conditional can also be used
+% later in the document, say, to conditionally put the References on a 
+% page by themselves.
+
+
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version and documentation can be obtained at:
+% http://www.ctan.org/pkg/url
+% Basically, \url{my_url_here}.
+
+
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Assessing Crash Hotspots with PennDOT Spatial Accident Data}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{Logan~Camacho,
+        Sam~Adebayo,
+        and~Jacob~Gavin}% <-this % stops a space}
+
+
+% note the % following the last \IEEEmembership and also \thanks - 
+% these prevent an unwanted space from occurring between the last author name
+% and the end of the author line. i.e., if you had this:
+% 
+% \author{....lastname \thanks{...} \thanks{...} }
+%                     ^------------^------------^----Do not want these spaces!
+%
+% a space would be appended to the last name and could cause every name on that
+% line to be shifted left slightly. This is one of those "LaTeX things". For
+% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+% "AB" then you have to do: "\textbf{A}\textbf{B}"
+% \thanks is no different in this regard, so shield the last } of each \thanks
+% that ends a line with a % and do not let a space in before the next \thanks.
+% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+% you are supposed to have spaces between the names. For what it is worth,
+% this is a minor point as most people would not even notice if the said evil
+% space somehow managed to creep in.
+
+
+%
+%*************************** Subject to change ******************
+%
+
+
+
+
+
+
+\markboth{Assessing Crash Hotspots with PennDOT Spatial Accident Data, October~2025}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+% 
+% *** Note that you probably will NOT want to include the author's ***
+% *** name in the headers of peer review papers.                   ***
+% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+% you desire.
+
+
+
+
+% If you want to put a publisher's ID mark on the page you can do it like
+% this:
+%\IEEEpubid{0000--0000/00\$00.00~\copyright~2015 IEEE}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark.
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+This project intends to pinpoint road segments within the state of Pennsylvania that carry a significantly higher proportion of car accidents, with predictions based on past car crash data in conjunction with mapped out traffic volume data. Heat mapping showed significant clusters of accidents in larger cities in PA, mainly Philadelphia and Pittsburgh, the target of our initial analysis. Alongside this we used k-means clustering in order to both gain additional insights and create a model that detects an areas change in crash reporting based on changes in condition. These include changes to road conditions, weather, visibility, among other things
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+%\begin{IEEEkeywords}
+
+%\end{IEEEkeywords}
+%
+
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+% The very first letter is a 2 line initial drop letter followed
+% by the rest of the first word in caps.
+% 
+% form to use if the first word consists of a single letter:
+% \IEEEPARstart{A}{demo} file is ....
+% 
+% form to use if you need the single drop letter followed by
+% normal text (unknown if ever used by the IEEE):
+% \IEEEPARstart{A}{}demo file is ....
+% 
+% Some journals put the first two words in caps:
+% \IEEEPARstart{T}{his demo} file is ....
+% 
+% Here we have the typical use of a "T" for an initial drop letter
+% and "HIS" in caps to complete the first word.
+\IEEEPARstart{A}{cross} the 67 counties within the Commonwealth of Pennsylvania span 120,000 miles of state or locally owned roads and highways. \cite{PennDOT2024CrashFacts} Across these differing bodies for vehicles to travel upon are a daily occurence of car accidents, some of which have fatal outcomes. Ever since the Pennsylvania Department of Transportation was created in 1970 \cite{PennDOT_FactBook_410}, keeping records of every minute detail pertaining to traffic, car accidents, and road-infrastructure-improvement was imperative to maintain a solid traffic network. As the number of cars and drivers increased world-wide, local governments had to understand the nature of these roadways and the increasing volume of traffic traveling upon them. In order to maximize civilian safety and protection statewide, a more in-depth analysis is necessary when considering the daily traffic volume. Our team decided that to spread awareness on road safety and accident prevention, we will be using the Pennsylvania Department of Transportation (PennDOT) car crash data from 2024 in conjunction with PennDOT traffic and mapping data made with ArcGIS to find which areas have the worst crash rate in comparison to its daily traffic volume, what justifies the severity rate of the crashes in these areas, as well as using other factors such as speed limits and seasonal changes can reduce/increase the rate of accidents in these high-volume areas.
+% You must have at least 2 lines in the paragraph with the drop letter
+% (should never be an issue)
+
+
+\hfill 
+
+ \subsection{Beneficiaries of the project}
+This project is intended to benefit drivers in Pennsylvania. Although some of the insights gained from this project may not by themselves be usable by PA drivers, the insights may help to inform state and local policymakers to make decisions that are in the best interest of PA drivers. Ensuring the safety of drivers is a non-partisan issue that is unlikely to be subject to bias by decision makers. For example, suppose it is discovered that there are twice the number of accidents on a particular intersection in the winter months than there are in the summer months. In that case, it may suggest that additional investment needs to be made into winterizing the roads, with perhaps better rock salt coverage, better lighting, or something else. 
+
+The goal of this project will be to uncover the underlying trends in accident data, to see if there are any actions that can be taken to the benefit of Pennsylvania drivers, to ensure their safety on roads throughout the state and throughout the seasons. 
+In addition, emergency responders and public health officials could find value in the project’s results. By anticipating accident hotspots and understanding the underlying causes, emergency services can optimize their preparation, potentially reducing response times and improving outcomes for accident victims.
+
+The broader community, including businesses and residents of areas where high accident rates are, will benefit from safer roads and fewer accidents. Reduced crash rates can lead to lower insurance premiums and decreased traffic congestion. Overall, the approach of this project ensures that its benefits extend well beyond individual drivers, supporting the safety of anyone who lives or works in Pennsylvania
+
+
+\subsection{Purpose of the project}
+The purpose of this project is to perform a comprehensive analysis of traffic accident data in the 67 counties of Pennsylvania to uncover patterns and underlying trends that contribute to road danger. Although traffic accidents are recorded and summarized by the state, these reports often lack the context of traffic volume, seasonal factors, and environmental factors that can increase risk. By integrating PennDOT crash records with traffic volume data and geospatial tools such as ArcGIS, this project aims to identify road segments and intersections that are disproportionately prone to accidents. 
+
+Beyond simple identification of high-risk areas, this project seeks to examine the contributing variables that define these zones, such as speed limits, lighting conditions, weather and seasonal fluctuations, and temporal patterns such as time of day or weekday vs. weekend. The goal is not only to highlight where crashes are most frequent, but also to determine why these areas are more hazardous, and what features they share. This will allow for a broader picture to be painted to raise awareness for driver discipline.
+
+Ultimately, the purpose of the project is to generate actionable insights that can inform decision-making by transportation planners, engineers, policymakers, and even the drivers themselves. By translating raw data into meaningful patterns, the project aims to provide a framework for interventions that improve safety, inform infrastructure investment, and reduce injuries and fatalities on Pennsylvania roads.
+
+
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation results for the network.}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that the IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command,
+% and the \label for the overall figure must come after \caption.
+% \hfil is used as a separator to get equal spacing.
+% Watch out that the combined width of all the subfigures on a 
+% line do not exceed the text width or a line break will occur.
+%
+%\begin{figure*}[!t]
+%\centering
+%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
+%\label{fig_second_case}}
+%\caption{Simulation results for the network.}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat[]), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
+% labels, the optional argument to \subfloat must be present. If a
+% subcaption is not desired, just leave its contents blank,
+% e.g., \subfloat[].
+
+
+% An example of a floating table. Note that, for IEEE style tables, the
+% \caption command should come BEFORE the table and, given that table
+% captions serve much like titles, are usually capitalized except for words
+% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
+% and up, which are usually not capitalized unless they are the first or
+% last word of the caption. Table text will default to \footnotesize as
+% the IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+% Note that the IEEE does not put floats in the very first column
+% - or typically anywhere on the first page for that matter. Also,
+% in-text middle ("here") positioning is typically not used, but it
+% is allowed and encouraged for Computer Society conferences (but
+% not Computer Society journals). Most IEEE journals/conferences use
+% top floats exclusively. 
+% Note that, LaTeX2e, unlike IEEE journals/conferences, places
+% footnotes above bottom floats. This can be corrected via the
+% \fnbelowfloat command of the stfloats package.
+
+
+
+
+
+
+\subsection{Technical Challenges (NOTE: EXPAND ON WHAT WAS DONE TO GET AROUND THEM)}
+Even though we will be working with a "smaller" data set initially (data by county), we will still face challenges regarding the size and scope of our datasets; such as how we would map things like road size or traffic congestion,  the different variables used for different accident and vehicle types, sorting out location data, etc. Despite this, we can still examine prior papers to see how to move forward, which will be presented here.
+
+Looking at previous studies, we found that, while complex, solving issues and creating models related to an issue as complex as traffic and accident data is not impossible. One such example comes from \cite{10.1145/3219819.3219922} at Iowa University, where they took data across the state of Iowa and did the following: ``We impose a spatial grid \textit{S }on the study area, where each grid \textit{s(i)} represents a \textit{d × d} square region. For example, if \textit{d = 5km}, the entire state of Iowa can be partitioned into 128 × 64 grids". While this may be a bit more intensive, it is definitely something we can consider doing, given that our dataset includes coordinates for the crashes, which we could potentially map in a similar fashion. Deciding where to go with that data should also be easier, since plotting it should give us a better representation of clusters of data and where we should focus. I believe that looking for and finding more research papers related to traffic and accident reports could help us narrow down tactics we could use to interpret and move forward with the data.
+
+\section{Related Works}
+After taking the time to review other articles related to our project proposal, we have gained various insights that we can apply from now on with our data. Although our topic appears to be well-researched, readers will often find that there are multiple main issues related to traffic and accident data that have several solutions.
+
+\subsection{K-Means Approaches}
+Looking to the researchers who wrote and developed \cite{10.1145/3219819.3219922}, they used k-means clustering on spatial data to map out the sections of the road in its given dataset, which in this case was Iowa. Their actual model, on the other hand, is a modified type of neural network known as Long Short-Term Memory (LSTM), which in their words ``The ConvLSTM model is a variation of LSTM to handle spatio-temporal prediction problems ... Each input feature of a ConvLSTM network is a three-dimensional spatio-temporal tensor, where the first two dimensions are the spatial dimension. Comparing with the original LSTM model, the input-to-state and state-to-state transitions of the ConvLSTM cell involve convolutional operations that output 3-dimensional tensors". \cite{10.1145/3219819.3219922} To explain this, they would take the dimensions of one of their road segments, input them into their neural network, and have the network learn how to classify more dangerous road segments while " forgetting" any data that may be inconsequential to doing so. Again, this is a method that we could implement using ArcGIS data, but combining both that and our accident data may prove to be a challenge.
+
+\subsection{Other Methods}
+To build on this, \cite{Ghandour2019} uses a Lebanese car accident database to map accidents to their locations in Lebanon. Then, to go further, they end up creating crash event maps of Beirut, and for their final solution, they assign hazard values to a road based on segment length, the number of crashes, and their data's time frame. Although this isn't too technical, we may end up creating a similar feature if we utilize road-segmented data in our final project. 
+
+Lastly, \cite{Rahim2021} uses a much different approach. Using variables from their crash dataset, they decided to remove null values and make their set binary. Afterward they mapped them out, then converted the coordinates to pixel conversions, populated them with their crash data, and then sent that final image (a 3x3 matrix) into their model. While we have a dataset to work with, implementing this may require a significant amount of time and resources, especially since some of our variables aren't easily converted into binary attributes. Overall, there is still more literature review to be done; however, based on what we've seen so far, our project does have room for nuance within this space.
+
+\subsection{Relating to Our Work}
+The more prominent problem arises from our data and is immediately apparent upon a quick glance. There are a multitude of variables that we are dealing with, from accident type to the types of vehicle involved, the time of day and location, the number of people injured or involved in the accident, and so on, and so forth. We obviously do not plan to use the raw datasets in their entirety, but having to narrow them down for our specific needs will be a large task on its own. Besides this, we may have to edit our final data set because one variable was shown to have no significance, or maybe we missed a variable that could have drastically altered the data for the better. There is a possibility that some of the data we have could be very redundant, which could also hurt any model we decide to make.
+
+Later on in this paper, readers will see that we were able to take some of our situational variables, for example road conditions, visibility, weather, and so on, and make a model that is able to notice a change in accidents reported when compared to more ideal conditions (i.e., high visibility, clear weather). Overall while the abundance of columns in our data was a lot to clean through, we were able to draw some very valuable insights from the ones that we decided to keep.
+
+\section{Dataset}
+
+NOTE: Remove any technical terms (things like size of files or number of columns/rows, etc.)
+
+Our analysis uses a coordinated set of PennDOT flat files for calendar year 2024. The core fact table is CRASH\_2024.csv, which contains one record per crash keyed by the global crash identifier CRN. It provides timestamps, geospatial coordinates, jurisdictional fields, roadway and environmental context, and aggregate severity and participant counts (approximately 110,814 records; about~47 MB). Complementing this, FLAGS\_2024.csv mirrors the crash-level cardinality and supplies engineered 0/1 indicators describing behaviors, contexts, and crash typologies (about~56 MB).
+
+Context about the roadway at the crash location comes from ROADWAY\_2024.csv. Because a single crash can be associated with multiple roadway elements (e.g., ramps, intersecting routes, or segmented links), this table can include more than one record per CRN. It includes operational and design attributes such as lane counts and speed limits, as well as network identifiers that enable aggregation to routes and segments (roughly 174,250 rows; about 14 MB).
+
+Entity-level detail is split across two additional files. VEHICLE\_2024.csv captures one row per involved unit (joined on CRN and UNIT\_NUM) with fields for vehicle type and body, movements and speeds, impact points, towing, and special usage (about 197,507 rows; about 36 MB). PERSON\_2024.csv drills down further to the individual level (CRN, UNIT\_NUM, PERSON\_NUM), providing demographics, role and seating position, restraint and airbag deployment, ejection, injury severity, and transport status (about 244,174 rows; about 26 MB).
+
+Three specialized files add depth for particular scenarios. COMMVEH\_2024.csv augments commercial and heavy vehicle cases with GVWR, hazmat, and carrier information (about 8,717 rows). CYCLE\_2024.csv records motorcycle-specific safety gear and attributes (about 3,427 rows). TRAILVEH\_2024.csv describes trailers, including cases with multiple trailers per unit (about 5,180 rows).
+
+Across all files, the global crash identifier CRN is the primary key that links tables. Vehicle-level joins use the composite key of CRN and UNIT\_NUM, while person-level joins add PERSON\_NUM. Roadway context can include multiple records per crash, and the ROUTE and SEGMENT fields enable consistent aggregation to network elements for segment-level analysis.
+
+There is also the matter of geospatial referencing. Each crash record includes DEC\_LATITUDE and DEC\_LONGITUDE fields in decimal degrees (WGS84). For roadway context, ROUTE and SEGMENT identifiers allow alignment with PennDOT's linear referencing system, facilitating spatial joins and mapping.  In order to support spatial analysis, we will leverage these geospatial fields to map crashes to roadway segments and other relevant spatial units. Initial EDA will include visualizations such as heatmaps and cluster analyses to identify high-risk areas. 
+
+
+
+Normalizing the data will be essential for effective modeling. This is because while it is failrly natural that road segments with high traffic volumes will have more crashes, and this is data that we wish to capture, there is also the risk that models will simply learn to predict high crash counts based on traffic volume alone, rather than more nuanced risk factors. To mitigate this, we will consider normalizing crash counts by traffic exposure metrics such as AADT (Annual Average Daily Traffic) where available, or by segment length and functional class. This will help ensure that our models focus on the underlying risk factors rather than just exposure.
+
+Because we plan to use ArcGIS for spatial analysis and visualization, we will ensure that all geospatial data is compatible with ArcGIS formats. This includes verifying coordinate systems, projections, and data formats to facilitate seamless integration into our GIS workflows. There is also a need for consideration of what we will consider to be the output of the model. While our goal is to identify factors contributing to crash risk, there is consideration needed to how crashes will be "grouped". For example, we may wish to aggregate crashes to roadway segments or intersections for certain analyses. This will require careful handling of the data to ensure that we are accurately capturing the risk factors at the appropriate spatial scale. There is also the possibility of using hexagonal binning or other spatial aggregation techniques to create uniform spatial units for analysis, although this approach will likely sacrifice granularity in favor of uniformity, as road segments that run close to each other may end up in the same hexagon despite having different characteristics. 
+
+\subsection{Visualizations/Insights}
+Before moving fully into building our model, we decided to make some visualizations to better understand the overall crash distribution for PA
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=\linewidth]{CrashHeatMap.png}
+        \caption{Colored heatmap of accident clusters across Pennsylvania}
+        \label{fig:your_image_label}
+    \end{figure}
+
+Figure 1 shows a heatmap of PA based on how frequent crashes happen. While this is a basic model, it does show us that the main hot-spots happen to be on the New Jersey/PA border, in some of the more highly populated cities, such as Pittsburgh and Philadelphia, and along parts of major roadways like I-80. While this visual is nice, we decided it would be better to get a better understanding of the spread of crashes using a K-means clustering approach to get a better overall view of PA and its crash distribution.
+
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=\linewidth]{PA_Overall_Screenshot.png}
+        \caption{K-means cluster map of PA with respect to reported crashes}
+        \label{fig:your_image_label}
+    \end{figure} 
+
+Figure 2 shows a clustering order of K-means for all crashes reported in PA during 2024. While it is hard to see the individual points on the zoomed-out version of the map, you can still make out more insights based on this image when compared to our previous heatmap. For starters, there is a lack of reported accidents in Central PA, likely due to the decreased population and presence of roadways. The effect of densely populated areas having more accidents, and in some cases their own cluster, is also still present. You can also make that fact out based on the size of clusters. For example, clusters 0, 4, 6, and 7 all come out to be smaller than clusters 1 and 8 because of the fact that there aren't major cities or points of traffic made present in the ladder. 
+
+    \begin{figure}[h!]
+        \centering
+        \begin{subfigure}{0.48\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{PA_Cluster0_Screenshot.png}
+            \caption{Look of Fig 2 Cluster 0, based in Southeast PA}
+            \label{fig:pa_overall}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.48\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{PA_Cluster7_Screenshot.png}
+            \caption{Look of Fig 2 Cluster 7, based above cluster 0 (Above)}
+            \label{fig:pa_zoomed}
+        \end{subfigure}
+        \caption{Look of two clusters based on roadways present}
+        \label{fig:pa_clusters}
+    \end{figure}
+    \FloatBarrier
+
+Figure 3, shown above, displays two examples of a type of cluster shown in Figure 2. These are clusters that are based on roads. Figure 3 a shows the border of PA and NJ, while Figure 3 b shows I-78. Since these would be points of interest for many travelers, whether that be getting to work or going on a trip across or out of state, these are roadways that incur vast amounts of traffic which results in a higher number of accidents. This information would also be useful to us, as looking at things like changes in number of accidents based on weather conditions, or if the severity of an accident changes based on said conditions would be useful for our project.
+
+
+    \FloatBarrier
+    \begin{figure}[h!]
+        \centering
+        \begin{subfigure}{0.48\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{PA_Cluster5_Screenshot.png}
+            \caption{Look of Fig 2 Cluster 5, based around Pittsburgh}
+            \label{fig:pa_overall}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.48\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{PA_Cluster4_Screenshot.png}
+            \caption{Look of Fig 2 Cluster 4, based left of Fig 2(a)}
+            \label{fig:pa_zoomed}
+        \end{subfigure}
+        \caption{Look of two clusters based around populated cities}
+        \label{fig:pa_clusters}
+    \end{figure}
+    \FloatBarrier
+
+    
+Figure 4 Looks back into Figure 2, but is centered around a different type of cluster that we noticed. These are clusters based around areas with a high population. Figure 4 a shows a cluster with a center around Pittsburgh, while figure 4 b shows a cluster that looks to have two centers, one in Lancaster (left) and Reading (right). These could also help us draw different insights in comparison to our traffic data. For instance, while less people may be on the road during a snowstorm that drop off may hit a highway harder than a city, since people may be shopping for necessities or have to rush to get back home from wherever they may have been within that city. Overall, these visualizations give us a better reference of how our crashes are spread across and what details we may have to look into and watch out for going forward.
+
+\subsection{Schema Summaries (Probably should drop this.)}
+
+\subsubsection{\code{CRASH_2024.csv} (Crash-Level)}
+This table provides the canonical crash record. Location and time are available through fields such as \code{DEC_LATITUDE}, \code{DEC_LONGITUDE}, \code{COUNTY}, \code{MUNICIPALITY}, \code{CRASH_MONTH}, \code{DAY_OF_WEEK}, \code{HOUR_OF_DAY}, and \code{TIME_OF_DAY}. Environmental conditions include \code{WEATHER1}/\code{WEATHER2}, \code{ILLUMINATION}, \code{ROAD_CONDITION}, and \code{RDWY_SURF_TYPE_CD}. Control and geometry are described via \code{TCD_TYPE}, \code{TCD_FUNC_CD}, \code{INTERSECT_TYPE}, \code{INTERSECTION_RELATED}, \code{RELATION_TO_ROAD}, and \code{LOCATION_TYPE}. Work-zone context is captured with \code{WORK_ZONE_IND}, \code{WORK_ZONE_TYPE}, \code{WORK_ZONE_LOC}, and related \code{WZ_*} fields. Outcome fields include vehicle and person counts, \code{MAX_SEVERITY_LEVEL}, and injury/fatality counts, which we will use as labels or for descriptive analysis rather than as predictors when appropriate.
+
+\code{CRASH_2024.csv} is the primary table in our schema, with a one-to-one relationship to \code{FLAGS_2024.csv} and one-to-many relationships to \code{ROADWAY_2024.csv}, \code{VEHICLE_2024.csv}, and \code{PERSON_2024.csv} via the global crash identifier \code{CRN}.
+
+\subsubsection{\code{FLAGS_2024.csv} (Crash-Level Flags)}
+This companion table adds engineered binary indicators for behaviors, contexts, and crash configurations. Examples include \code{ALCOHOL_RELATED}, \code{DRUG_RELATED}, \code{DISTRACTED}, \code{SPEEDING_RELATED}, and scene descriptors such as \code{INTERSECTION}, \code{LANE_DEPARTURE}, \code{REAR_END}, \code{LEFT_TURN}, \code{OVERTURNED}, and \code{WORK_ZONE}. Outcome-adjacent flags such as \code{FATAL}, \code{INJURY}, and \code{FATAL_OR_SUSP_SERIOUS_INJ} will be excluded from feature sets whenever they overlap with target labels to avoid leakage.
+
+\subsubsection{\code{ROADWAY_2024.csv} (Crash \& Roadway Context)}
+Roadway design and operational context are represented here. Fields such as \code{LANE_COUNT}, \code{ACCESS_CTRL}, \code{SPEED_LIMIT}, \code{RDWY_ORIENT}, \code{RAMP}, and \code{ROAD_OWNER} describe local conditions at the crash site. Network identifiers \code{ROUTE} and \code{SEGMENT} support aggregation to consistent linear referencing units. Because a crash can relate to multiple roadway elements, cardinality is one-to-many with respect to CRN.
+
+\subsubsection{\code{VEHICLE_2024.csv} (Unit-Level)}
+Each involved road user or vehicle is captured as a unit. Attributes like \code{UNIT_TYPE}, \code{VEH_TYPE}, \code{BODY_TYPE}, \code{VEH_COLOR_CD}, \code{MODEL_YR}, and \code{COMM_VEH_IND} describe the asset, while dynamics and context such as \code{VEH_MOVEMENT}, \code{TRAVEL_SPD}, \code{IMPACT_POINT}, \code{PRIN_IMP_PT}, \code{TOW_IND}, and \code{SPECIAL_USAGE} describe pre-crash motion and post-crash status. Indicators of interactions with non-motorists are also present.
+
+\subsubsection{\code{PERSON_2024.csv} (Person-Level)}
+Person-level records include demographics and roles (\code{AGE}, \code{SEX}, \code{PERSON_TYPE}, \code{SEAT_POSITION}, \code{NON_MOTORIST}) as well as safety systems and injury information (\code{RESTRAINT_HELMET}, \code{AIRBAG1} - \code{AIRBAG4}, \code{EJECTION_IND}, \code{INJ_SEVERITY}, \code{TRANSPORTED}). These fields support severity modeling and equity-focused analyses.
+
+\subsubsection{\code{COMMVEH_2024.csv}, \code{CYCLE_2024.csv}, \code{TRAILVEH_2024.csv}}
+These specialized tables enrich particular subsets of crashes. Commercial/heavy vehicle records add GVWR, hazmat indicators, and carrier identifiers; motorcycle records capture helmet use and protective gear as well as machine attributes; trailer records indicate presence, type, and the possibility of multiple trailers per unit via sequencing.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Analysis Scope and Units (Put next couple subsections into one, into }
+\begin{itemize}
+\item Targets and aggregation levels should be explored (e.g., frequency vs. severity; per-crash, per-segment, or intersection).
+\item Exposure adjustments may be considered (e.g., offsets using AADT, segment length, and time).
+\item Temporal granularity could be compared (monthly, weekly, seasonal effects, special events/holidays).
+\end{itemize}
+
+\subsection{Data Quality and Preparation}
+\begin{itemize}
+\item Join cardinality and deduplication approaches should be reviewed to avoid unintended record multiplication.
+\item Screening for missing/implausible values may be applied (e.g., null coordinates, extreme speeds/ages).
+\item Handling of high-cardinality categories and rare levels could be standardized (e.g., grouping/encoding).
+\end{itemize}
+
+\subsection{Geospatial Considerations}
+\begin{itemize}
+\item Choice of projection/CRS should be selected for spatial accuracy (e.g., StatePlane/UTM) and documented.
+\item Map-matching/snapping tolerances to centerlines or LRS could be evaluated, including intersection identification.
+\item Segment definitions may be explored (homogeneous attributes, fixed lengths, or network-defined segments).
+\end{itemize}
+
+\subsection{External Covariates}
+\begin{itemize}
+\item Traffic exposure sources (e.g., AADT) might be joined and, where relevant, seasonally adjusted.
+\item Environmental and weather context could be incorporated (precipitation, temperature, daylight).
+\item Built environment and context layers may be considered (land use, schools, transit, enforcement, work zones).
+\end{itemize}
+
+\subsection{Modeling Approach (Exploratory)}
+\begin{itemize}
+\item Count models with exposure (Poisson/negative binomial, zero-inflation) should be explored for frequency.
+\item Ordinal/binary severity formulations may be compared, with attention to class imbalance and calibration.
+\item Spatial and network-aware structures could be evaluated (spatial random effects, network autocorrelation).
+\end{itemize}
+
+\subsection{Leakage Considerations}
+\begin{itemize}
+\item Outcome-adjacent variables should be screened from features to reduce leakage risk.
+\item Temporal availability of features may be verified to avoid look-ahead bias.
+\end{itemize}
+
+\subsection{Evaluation and Validation}
+\begin{itemize}
+\item Spatial/temporal cross-validation schemes could be used to reduce optimistic estimates.
+\item Metrics may be selected to match task (e.g., deviance/RMSE for counts; PR-AUC/Brier for classification).
+\item Error analysis and interpretability tools should be explored (e.g., partial dependence/SHAP; slice checks).
+\end{itemize}
+
+\subsection{Equity and Ethics}
+\begin{itemize}
+\item Disparate performance across places and populations could be assessed.
+\item Privacy-preserving publication strategies may be considered (jittering, aggregation, suppression thresholds).
+\end{itemize}
+
+\subsection{ArcGIS Workflow Notes}
+\begin{itemize}
+\item Data products and field domains could be standardized for geodatabases and layers.
+\item Symbology and map templates may be aligned for comparability across geographies and time.
+\end{itemize}
+
+\subsection{Documentation and Reproducibility}
+\begin{itemize}
+\item An ER diagram and data dictionary should be drafted to clarify keys and value domains.
+\item ETL steps and validations may be encoded in a lightweight, versioned pipeline.
+\end{itemize}
+
+\subsection{Cleaning Plan }
+
+\subsubsection{Global Ingestion and Normalization}
+\begin{enumerate}
+\item Read CSVs with consistent encoding; trim whitespace; preserve provided column names.
+\item Enforce types:
+    \begin{itemize}
+      \item Identifiers: \code{CRN} as string-like key; \code{UNIT_NUM}, \code{PERSON_NUM} as integers.
+      \item Categorical: codes (e.g., \code{TCD_TYPE}, \code{ILLUMINATION}, \code{UNIT_TYPE}) as categorical strings.
+      \item Numeric: counts, speeds, limits, lane counts to numeric with coercion.
+      \item Binary flags: coerce to 0/1 integers.
+    \end{itemize}
+\item Standardize missing values: convert blanks and placeholders (e.g., \code{NA}, \code{NULL}) to NA.
+\item Deduplicate: ensure \code{CRN} uniqueness at crash level; drop exact duplicates elsewhere.
+\item Geospatial checks: validate latitude/longitude ranges for Pennsylvania; flag out-of-bounds.
+\item Temporal checks: verify \code{CRASH_YEAR}=2024; standardize month/day/hour fields.
+\item Category harmonization: document codebooks for categorical values.
+\end{enumerate}
+
+\section{Methods}
+Traffic data analysis is an area that our team has not previously explored, so we aim to gain a deeper understanding of the crash data and familiarize ourselves with ArcGIS mapping software to extract traffic risks that contribute to increased crash frequency. Understanding how these crash hotspots occur is imperative to determining where they have the highest likelihood of appearing on the road.
+
+Not only does this involve combing through the datasets for the extractable features and any formatting errors, but also reading the associated PennDOT documentation to further our contextual foundation on the subject matter. With the correlation between tables, table joins, and organizational column additions, this alludes to our team setting the definitive features and response variables for each stage of testing. Once the variables are segmented, we should be entering week 6 of this project as the beginning of model training and looping between variable-model combinations before increasing scale.
+
+To prepare the model for statewide applications, it is in our best interest to begin training using simpler models with fewer iterations before increasing model complexity and region area. This is combined with the variable interpretation previously mentioned to maximize model performance to scale. This performance-at-scale optimization, combined with the preliminary evaluation of models, will mark a positive milestone for week nine. The more time allotted to handling visualization plans for the final presentation, the better off our team will be throughout this project.
+
+%New Additions:
+
+Before working with our cleaned data set, we decided to use a K-means algorithm in order to draw some more insights. While we already have our own preconceived notions of where these accidents may primarily take place, it is always a good idea to double check in order to make sure we know where to look and how to move forward.
+
+\section{Experiments}
+
+\section{Conclusion}
+% if have a single appendix:
+%\appendix[Proof of the Zonklar Equations]
+% or
+%\appendix  % for no appendix heading
+% do not use \section anymore after \appendix, only \section*
+% is possibly needed
+
+% use appendices with more than one appendix
+% then use \section to start each appendix
+% you must declare a \section before using any
+% \subsection or using \label (\appendices by itself
+% starts a section numbered zero.)
+%
+
+
+\appendices
+%\section{}
+%Appendix one text goes here.
+
+% you can choose not to have a title for an appendix
+% if you want by leaving the argument blank
+%\section{}
+%Appendix two text goes here.
+
+
+% use section* for acknowledgment
+%\section*{Acknowledgment}
+
+
+
+
+
+% Can use something like this to put references on a page
+% by themselves when using endfloat and the captionsoff option.
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{references}
+
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+
+
+% biography section
+% 
+% If you have an EPS/PDF photo (graphicx package needed) extra braces are
+% needed around the contents of the optional argument to biography to prevent
+% the LaTeX parser from getting confused when it sees the complicated
+% \includegraphics command within an optional argument. (You could create
+% your own custom macro containing the \includegraphics command to make things
+% simpler here.)
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+% or if you just want to reserve a space for a photo:
+
+%\begin{IEEEbiographynophoto}{Logan Camacho}
+%Biography text here.
+%\end{IEEEbiographynophoto}
+
+% if you will not have a photo at all:
+%\begin{IEEEbiographynophoto}{Jacob Gavin}
+%Biography text here.
+%\end{IEEEbiographynophoto}
+
+% insert where needed to balance the two columns on the last page with
+% biographies
+%\newpage
+
+%\begin{IEEEbiographynophoto}{Sam Adebayo}
+%Biography text here.
+%\end{IEEEbiographynophoto}
+
+% You can push biographies down or up by placing
+% a \vfill before or after them. The appropriate
+% use of \vfill depends on what kind of text is
+% on the last page and whether or not the columns
+% are being equalized.
+
+%\vfill
+
+% Can be used to pull up biographies so that the bottom of the last one
+% is flush with the other column.
+%\enlargethispage{-5in}
+
+
+
+% that's all folks
+\end{document}
+
+
